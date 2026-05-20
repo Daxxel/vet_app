@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 from database import con
 
 app = Flask(__name__)
@@ -11,17 +11,17 @@ def index():
 
 #Login-------------------------------------------------------------------------------------------------
 
-@app.route('/login')
+@app.route('/login', methods=['GET','POST'])
 def login_admin():
 	if request.method == 'POST':
-		cor = request.form['email']
+		eml = request.form['email']
 		psw = request.form['password']
-		cursor.execute('select from admin where email = %s and password = %s',(cor,psw))
-		log = cursor.fetchone()
-		connect.close()
-		if res:
-			return redirect('/dash')
-		return "Usuario o Contraseña incorrectos"
+		cursor.execute('select from admin where email = %s and password = %s',(eml,psw))
+		log = cursor.fetchall()
+		if log:
+			return redirect('/dashboard')
+		else:
+			return render_template('login.html',msg="Usuario o Contraseña incorrectos")
 	return render_template('login.html')
 
 #Dashboard-------------------------------------------------------------------------------------------------
