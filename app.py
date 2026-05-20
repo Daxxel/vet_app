@@ -1,0 +1,140 @@
+from flask import Flask, render_template, request, redirect
+from database import con
+
+app = Flask(__name__)
+connect = con()
+cursor = connect.cursor()
+
+@app.route('/')
+def index():
+	return render_template('index.html')
+
+#Login-------------------------------------------------------------------------------------------------
+
+@app.route('/login')
+def login_admin():
+	if request.method == 'POST':
+		cor = request.form['email']
+		psw = request.form['password']
+		cursor.execute('select from admin where email = %s and password = %s',(cor,psw))
+		log = cursor.fetchone()
+		connect.close()
+		if res:
+			return redirect('/dash')
+		return "Usuario o Contraseña incorrectos"
+	return render_template('login.html')
+
+#Dashboard-------------------------------------------------------------------------------------------------
+
+@app.route('/dashboard')
+def dash():
+	return render_template('dashboard.html')
+
+#Mascotas-------------------------------------------------------------------------------------------------
+
+@app.route('/mascotas')
+def pet_con():
+	cursor.execute('select * from mascotas order by id asc')
+	reg = cursor.fetchall()
+	for i in reg:
+       	        print("/".join(map(str,i)))
+	return render_template('mascotas.html',data=reg)
+
+@app.route('/reg_pet', methods=['POST'])
+def pet_reg():
+	nom = request.form['nombre']
+	edad = request.form['edad']
+	raza = request.form['raza']
+	peso = request.form['peso']
+	sexo = request.form['sexo']
+	hmed = request.form['historial']
+
+	cursor.execute('insert into mascotas (nombre,edad,raza,peso,sexo,h_medico) values (%s,%s,%s,%s,%s,%s)',(nom,edad,raza,peso,sexo,hmed,))
+	connect.commit()
+	return redirect('/mascotas')
+
+@app.route('/up_pet',methods=['POST'])
+def pet_up():
+	pid = request.form['id']
+	edad = request.form['edad']
+	peso = request.form['peso']
+	hmed = request.form['historial']
+	cursor.execute('update mascotas set edad=%s, peso=%s, hmed=%s where id=%s',(edad,peso,hmed,pid,))
+	connect.commit()
+	return redirect('/mascotas')
+
+@app.route('/del_pet',methods=['POST'])
+def pet_del():
+	pid = request.form['id']
+	cursor.execute('delete from mascotas where id=%s',(pid))
+	return redirect('/mascotas')
+
+#Doctores-------------------------------------------------------------------------------------------------
+
+@app.route('/doctores')
+def doc_con():
+	cursor.execute('select * from doctores order by id asc')
+	reg = cursor.fetchall()
+	for i in reg:
+       	        print("/".join(map(str,i)))
+	return render_template('doctores.html',data=reg)
+
+@app.route('/reg_doc', methods=['POST'])
+def doc_reg():
+	nom = request.form['nombre']
+	esp = request.form['especialidad']
+	hor = request.form['horario']
+	con = request.form['contacto']
+	cursor.execute('insert into doctores (nombre,especialidad,horario,contacto) values (%s,%s,%s,%s)',(nom,esp,hor,con,))
+	connect.commit()
+	return redirect('/doctores')
+
+@app.route('/up_doc',methods=['POST'])
+def doc_up():
+	pid = request.form['id']
+	hor = request.form['horario']
+	con = request.form['contacto']
+	cursor.execute('update doctores set horario=%s, contacto=%s where id=%s',(hor,con,pid,))
+	connect.commit()
+	return redirect('/doctores')
+
+@app.route('/del_doc',methods=['POST'])
+def doc_del():
+	pid = request.form['id']
+	cursor.execute('delete from doctores where id=%s',(pid))
+	return redirect('/doctores')
+
+#Consultas-------------------------------------------------------------------------------------------------
+
+@app.route('/consultas')
+def app_con():
+	cursor.execute('select * from consultas order by id asc')
+	reg = cursor.fetchall()
+	for i in reg:
+       	        print("/".join(map(str,i)))
+	return render_template('consultas.html',data=reg)
+
+@app.route('/reg_app', methods=['POST'])
+def app_reg():
+	hor = request.form['horario']
+	doc = request.form['doc']
+	pet = request.form['pet']
+	cursor.execute('insert into consultas (horario,id_doctor,id_mascota) values (%s,%s,%s)',(hor,doc,pet,))
+	connect.commit()
+	return redirect('/consultas')
+
+@app.route('/up_app',methods=['POST'])
+def app_up():
+	pid = request.form['id']
+	hor = request.form['horario']
+	doc = request.form['doc']
+	pet = request.form['pet']
+	cursor.execute('update consultas set horario=%s, id_doctor=%s, id_mascota=%s where id=%s',(hor,doc,pet,pid,))
+	connect.commit()
+	return redirect('/consultas')
+
+@app.route('/del_app',methods=['POST'])
+def app_del():
+	pid = request.form['id']
+	cursor.execute('delete from consultas where id=%s',(pid))
+	return redirect('/consultas')
