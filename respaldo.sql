@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict kZlSiylQfRCWCYoHKd1DKuFHdM4GKOG9EfVTorY7SiEdkRAHcbUT94nhJehqico
+\restrict oSODl0OuUMDOEeWwy0XdTROCZZQhHQJt5B8tHaKaZ9feR5iv5kd3dqF6k1mTVWG
 
 -- Dumped from database version 16.13 (Ubuntu 16.13-0ubuntu0.24.04.1)
 -- Dumped by pg_dump version 16.13 (Ubuntu 16.13-0ubuntu0.24.04.1)
@@ -203,7 +203,8 @@ ALTER TABLE ONLY public.mascotas ALTER COLUMN id SET DEFAULT nextval('public.mas
 --
 
 COPY public.admin (id, nombre, email, password) FROM stdin;
-1	Ricardo	chamsk8@vet.com	12345
+2	Ricardo	chamsk8@vet.com	scrypt:32768:8:1$UmZD3igiKgURowof$45876073e646962dfb4f1799203bd2c06193e91c1b6c572ccabb87b56b4251777879de3d73edb6ca6dbc8c09bda3113e83f8d478d5c29985ef4ad66abf7193fc
+4	Dafne	daxx@vet.com	scrypt:32768:8:1$UPG702YbITJjTok9$dc3b2c975e9e3211849cb486519729088595030c32730fb1d06544b99f0b24751b65ce1fb9a6ccf0eddbead78c1fea80917d20d2fe24df52bf61ab76f6440f32
 \.
 
 
@@ -237,7 +238,7 @@ COPY public.mascotas (id, nombre, edad, raza, peso, sexo, h_medico) FROM stdin;
 -- Name: admin_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vet_admin
 --
 
-SELECT pg_catalog.setval('public.admin_id_seq', 1, true);
+SELECT pg_catalog.setval('public.admin_id_seq', 4, true);
 
 
 --
@@ -313,5 +314,5 @@ ALTER TABLE ONLY public.consultas
 -- PostgreSQL database dump complete
 --
 
-\unrestrict kZlSiylQfRCWCYoHKd1DKuFHdM4GKOG9EfVTorY7SiEdkRAHcbUT94nhJehqico
+\unrestrict oSODl0OuUMDOEeWwy0XdTROCZZQhHQJt5B8tHaKaZ9feR5iv5kd3dqF6k1mTVWG
 

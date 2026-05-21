@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Menú principal</title>
-	<link rel="stylesheet" href="{{url_for('static',filename='styles.css')}}">
-</head>
-<body>
-	<main>
-	<h2>Tablas:</h2>
-	<div>
-		<a href="{{url_for('doc_con')}}"><button type="button">Doctores</button></a>
-		<a href="{{url_for('pet_con')}}"><button type="button">Mascotas</button></a>
-		<a href="{{url_for('login_admin')}}"><button type="button">Inicia Sesión</button></a>
-	</div>
-	</main>
-</body>
-</html>
+{% extends 'base_template.html' %}
+
+
+{% block title%} Inicio {% endblock %}
+<header>
+	<a href="{{url_for('login_admin')}}"><button type="button">Inicia Sesión</button></a>
+</header>
+{% block main %}
+	<h3>Poner imágenes de animales y así xd</h3>
+{% endblock %}

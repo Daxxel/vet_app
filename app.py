@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from database import con
+from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
 connect = con()
@@ -15,13 +17,13 @@ def index():
 def login_admin():
 	if request.method == 'POST':
 		eml = request.form['email']
-		psw = request.form['password']
-		cursor.execute('select from admin where email = %s and password = %s',(eml,psw))
-		log = cursor.fetchall()
-		if log:
+		password = request.form['password']
+		cursor.execute('select password from admin where email=%s',(eml,))
+		log = cursor.fetchone()
+		if log and check_password_hash(log[0],password):
 			return redirect('/dashboard')
 		else:
-			return render_template('login.html',msg="Usuario o Contraseña incorrectos")
+			return render_template('login.html', msg="Usuario o Contraseña incorrectos")
 	return render_template('login.html')
 
 #Dashboard-------------------------------------------------------------------------------------------------
@@ -138,3 +140,16 @@ def app_del():
 	pid = request.form['id']
 	cursor.execute('delete from consultas where id=%s',(pid))
 	return redirect('/consultas')
+
+#Registro(oculto)-----------------------------------------------------------------------------------------
+
+@app.route('/registro', methods=['GET','POST'])
+def reg_admin():
+	if request.method == "POST":
+		nom = request.form['nombre']
+		eml = request.form['email']
+		pwd = request.form['password']
+		password_hash = generate_password_hash(pwd)
+		cursor.execute('insert into admin (nombre,email,password) values (%s,%s,%s)',(nom,eml,password_hash))
+		connect.commit()
+	return render_template('register.html')
